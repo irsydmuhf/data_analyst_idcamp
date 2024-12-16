@@ -3,6 +3,7 @@ import pandas as pd
 import matplotlib.pyplot as plt
 import seaborn as sns
 import streamlit as st
+import os
 from babel.numbers import format_currency
 sns.set(style='dark')
 
@@ -23,7 +24,7 @@ all_df = create_season_mapping(all_df)
 
 hourly_trend_df = create_hourly_trend_df(all_df)
 seasonly_trend_df = create_seasonal_trend_df(all_df)
-
+st.write(f"Current Working Directory: {os.getcwd()}")
 st.write(
     """
     # Submission Data Analyst Dicoding with IDCamp
