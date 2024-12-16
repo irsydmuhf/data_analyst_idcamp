@@ -5,6 +5,7 @@ import seaborn as sns
 import streamlit as st
 import os
 from babel.numbers import format_currency
+
 sns.set(style='dark')
 
 def create_hourly_trend_df(df):
@@ -18,13 +19,21 @@ def create_season_mapping(df):
     df["season_day"] = df["season_day"].map(season_mapping)
     return df
 
-all_df = pd.read_csv("./all_data.csv")
+current_dir = os.path.dirname(os.path.abspath(__file__))
+file_path = os.path.join(current_dir, "all_data.csv")
+
+try:
+    all_df = pd.read_csv(file_path)
+    st.success("File 'all_data.csv' berhasil dimuat.")
+except FileNotFoundError:
+    st.error(f"File 'all_data.csv' tidak ditemukan di {file_path}. Pastikan file berada di direktori yang sama dengan script ini.")
+    st.stop()
 
 all_df = create_season_mapping(all_df)
 
 hourly_trend_df = create_hourly_trend_df(all_df)
 seasonly_trend_df = create_seasonal_trend_df(all_df)
-st.write(f"Current Working Directory: {os.getcwd()}")
+
 st.write(
     """
     # Submission Data Analyst Dicoding with IDCamp
