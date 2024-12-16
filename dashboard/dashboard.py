@@ -56,7 +56,7 @@ st.bar_chart(
     use_container_width=True,
 )
 if st.button('Penjelasan Grafik 2'):
-    st.markdown('''Grafik ini menunjukkan rata-rata jumlah penyewaan sepeda pada setiap musim. Terlihat bahwa :orange[Musim Gugur (Fall)] memiliki jumlah rata-rata penyewaan tertinggi, diikuti oleh :red[Musim Panas (Summer)]. Sebaliknya, :blue[Musim Dingin (Winter)] memiliki jumlah penyewaan terendah. Pola ini menunjukkan bahwa faktor cuaca dan kenyamanan bersepeda memengaruhi tingkat penyewaan sepeda.''')
+    st.markdown('''Grafik ini menunjukkan rata-rata jumlah penyewaan sepeda pada setiap musim. Terlihat bahwa :orange[Musim Gugur (Fall)] memiliki rata-rata penyewaan tertinggi dengan jumlah 236 per jam, diikuti oleh :red[Musim Panas (Summer)] dengan jumlah :red[208 penyewaan] per jam. Sebaliknya, :rainbow[Musim Semi (Spring)] memiliki rata-rata penyewaan terendah dengan jumlah :rainbow[111 penyewa]. Pola ini menunjukkan bahwa faktor cuaca dan kenyamanan bersepeda memengaruhi tingkat penyewaan sepeda.''')
 
 with st.sidebar:
     st.image("https://github.com/dicodingacademy/assets/raw/main/logo.png")
