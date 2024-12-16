@@ -17,7 +17,7 @@ def create_season_mapping(df):
     df["season_day"] = df["season_day"].map(season_mapping)
     return df
 
-all_df = pd.read_csv("all_data.csv")
+all_df = pd.read_csv("./all_data.csv")
 
 all_df = create_season_mapping(all_df)
 
