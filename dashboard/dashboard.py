@@ -31,9 +31,8 @@ except FileNotFoundError:
 
 all_df = create_season_mapping(all_df)
 
-st.sidebar.header("Filter Data")
 with st.sidebar:
-    st.image("https://github.com/dicodingacademy/assets/raw/main/logo.png", width=200)
+    st.image("https://github.com/dicodingacademy/assets/raw/main/logo.png")
 selected_season = st.sidebar.multiselect(
     "Pilih Musim:",
     options=all_df["season_day"].unique(),
