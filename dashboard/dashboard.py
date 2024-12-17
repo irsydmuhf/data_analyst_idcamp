@@ -33,11 +33,11 @@ all_df = create_season_mapping(all_df)
 
 with st.sidebar:
     st.image("https://github.com/dicodingacademy/assets/raw/main/logo.png")
-selected_season = st.sidebar.multiselect(
-    "Pilih Musim:",
-    options=all_df["season_day"].unique(),
-    default=all_df["season_day"].unique()
-)
+    selected_season = st.sidebar.multiselect(
+        "Pilih Musim:",
+        options=all_df["season_day"].unique(),
+        default=all_df["season_day"].unique()
+    )
 with st.sidebar:
     st.write("Navigasi:")
     st.markdown("[Grafik Penyewaan Sepeda Tiap Jam](#grafik-penyewaan-sepeda-tiap-jam-per-hari)")
