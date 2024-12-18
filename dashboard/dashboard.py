@@ -33,18 +33,31 @@ all_df = create_season_mapping(all_df)
 
 with st.sidebar:
     st.image("https://github.com/dicodingacademy/assets/raw/main/logo.png")
-    selected_season = st.sidebar.multiselect(
+    selected_season = st.multiselect(
         "Pilih Musim:",
         options=all_df["season_day"].unique(),
         default=all_df["season_day"].unique()
     )
+    selected_weather = st.multiselect(
+        "Pilih Cuaca:",
+        options=all_df["weathersit_hour"].unique(),
+        default=all_df["weathersit_hour"].unique()
+    )
+    
+    st.markdown("### Keterangan Cuaca:")
+    st.caption("1: Cerah dan Berawan Ringan")
+    st.caption("2: Berawan dan Berkabut")
+    st.caption("3: Hujan Ringan dan Bersalju")
+    st.caption("4: Hujan Lebat dan Badai Salju")
+
 with st.sidebar:
     st.write("Navigasi:")
     st.markdown("[Grafik Penyewaan Sepeda Tiap Jam](#grafik-penyewaan-sepeda-tiap-jam-per-hari)")
     st.markdown("[Grafik Penyewaan Berdasarkan Musim](#grafik-penyewaan-sepeda-berdasarkan-musim)")
 
 filtered_df = all_df[
-    all_df["season_day"].isin(selected_season)
+    (all_df["season_day"].isin(selected_season)) &
+    (all_df["weathersit_hour"].isin(selected_weather))
 ]
 
 if filtered_df.empty:
@@ -94,5 +107,4 @@ st.pyplot(fig)
 
 if st.button('Penjelasan Grafik Penyewaan Berdasarkan Musim'):
     st.markdown('''Grafik ini menunjukkan rata-rata jumlah penyewaan sepeda pada setiap musim. Terlihat bahwa :orange[bar yang berwarna orange] memiliki rata-rata penyewaan tertinggi dibandingkan dengan yang lain.''')
-
 
