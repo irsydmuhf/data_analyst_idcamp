@@ -37,7 +37,7 @@ with st.sidebar:
         "Pilih Musim:",
         options=all_df["season_day"].unique(),
         default=all_df["season_day"].unique()
-    )
+    ),
     selected_weather = st.multiselect(
         "Pilih Cuaca:",
         options=all_df["weathersit_hour"].unique(),
