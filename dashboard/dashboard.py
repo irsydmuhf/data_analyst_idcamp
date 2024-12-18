@@ -88,7 +88,7 @@ ax.tick_params(axis="y", rotation=0)
 st.pyplot(fig)
 
 if st.button('Penjelasan Grafik Penyewaan Tiap Jam'):
-    st.markdown('''Grafik ini menunjukkan rata-rata jumlah penyewaan sepeda per jam sepanjang hari. Pola ini mencerminkan waktu sibuk. :blue[Bar yang berwarna biru] menunjukkan 3 waktu dengan jumlah penyewaan sepeda tertinggi dalam waktu 1 hari.''')
+    st.markdown('''Grafik ini menunjukkan rata-rata jumlah penyewaan sepeda per jam sepanjang hari. Pola ini mencerminkan waktu sibuk. :blue[Bar yang berwarna biru] menunjukkan 3 waktu dengan jumlah penyewaan sepeda :blue[tertinggi] dalam waktu 1 hari.''')
 
 st.header("Grafik Penyewaan Sepeda Berdasarkan Musim")
 fig, ax = plt.subplots(figsize=(8, 5))
@@ -109,4 +109,4 @@ ax.tick_params(axis="y", rotation=0)
 st.pyplot(fig)
 
 if st.button('Penjelasan Grafik Penyewaan Berdasarkan Musim'):
-    st.markdown('''Grafik ini menunjukkan rata-rata jumlah penyewaan sepeda pada setiap musim. Terlihat bahwa :orange[bar yang berwarna orange] memiliki rata-rata penyewaan tertinggi dibandingkan dengan yang lain.''')
+    st.markdown('''Grafik ini menunjukkan rata-rata jumlah penyewaan sepeda pada setiap musim. Terlihat bahwa :orange[bar yang berwarna orange] memiliki rata-rata penyewaan :orange[tertinggi] dibandingkan dengan yang lain.''')
