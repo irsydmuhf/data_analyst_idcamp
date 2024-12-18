@@ -8,16 +8,20 @@ from babel.numbers import format_currency
 
 sns.set(style="whitegrid")
 
+
 def create_hourly_trend_df(df):
     return df.groupby("hr")["cnt_hour"].mean()
 
+
 def create_seasonal_trend_df(df):
     return df.groupby("season_day")["cnt_hour"].mean()
+
 
 def create_season_mapping(df):
     season_mapping = {1: "Spring", 2: "Summer", 3: "Fall", 4: "Winter"}
     df["season_day"] = df["season_day"].map(season_mapping)
     return df
+
 
 current_dir = os.path.dirname(os.path.abspath(__file__))
 file_path = os.path.join(current_dir, "all_data.csv")
@@ -37,20 +41,19 @@ with st.sidebar:
         "Pilih Musim:",
         options=all_df["season_day"].unique(),
         default=all_df["season_day"].unique()
-    ),
+    )
     selected_weather = st.multiselect(
         "Pilih Cuaca:",
         options=all_df["weathersit_hour"].unique(),
         default=all_df["weathersit_hour"].unique()
     )
-    
+
     st.markdown("### Keterangan Cuaca:")
     st.caption("1: Cerah dan Berawan Ringan")
     st.caption("2: Berawan dan Berkabut")
     st.caption("3: Hujan Ringan dan Bersalju")
     st.caption("4: Hujan Lebat dan Badai Salju")
 
-with st.sidebar:
     st.write("Navigasi:")
     st.markdown("[Grafik Penyewaan Sepeda Tiap Jam](#grafik-penyewaan-sepeda-tiap-jam-per-hari)")
     st.markdown("[Grafik Penyewaan Berdasarkan Musim](#grafik-penyewaan-sepeda-berdasarkan-musim)")
@@ -107,4 +110,3 @@ st.pyplot(fig)
 
 if st.button('Penjelasan Grafik Penyewaan Berdasarkan Musim'):
     st.markdown('''Grafik ini menunjukkan rata-rata jumlah penyewaan sepeda pada setiap musim. Terlihat bahwa :orange[bar yang berwarna orange] memiliki rata-rata penyewaan tertinggi dibandingkan dengan yang lain.''')
-
