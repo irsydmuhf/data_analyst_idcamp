@@ -1,113 +1,134 @@
-import numpy as np
+import os
 import pandas as pd
+import numpy as np
 import matplotlib.pyplot as plt
 import seaborn as sns
 import streamlit as st
-import os
 from babel.numbers import format_currency
 
 sns.set(style="whitegrid")
 
-
+# === Helper functions ===
 def create_hourly_trend_df(df):
     return df.groupby("hr")["cnt_hour"].mean()
 
-
 def create_seasonal_trend_df(df):
     return df.groupby("season_day")["cnt_hour"].mean()
-
 
 def create_season_mapping(df):
     season_mapping = {1: "Spring", 2: "Summer", 3: "Fall", 4: "Winter"}
     df["season_day"] = df["season_day"].map(season_mapping)
     return df
 
-
+# === Load Data ===
 current_dir = os.path.dirname(os.path.abspath(__file__))
 file_path = os.path.join(current_dir, "all_data.csv")
 
 try:
     all_df = pd.read_csv(file_path)
-    st.success("File 'all_data.csv' berhasil dimuat.")
+    st.success("✅ Data loaded successfully.")
 except FileNotFoundError:
-    st.error(f"File 'all_data.csv' tidak ditemukan di {file_path}. Pastikan file berada di direktori yang sama dengan script ini.")
+    st.error(f"❌ File 'all_data.csv' not found at {file_path}. Please make sure it's in the same directory.")
     st.stop()
 
 all_df = create_season_mapping(all_df)
 
+# === Sidebar Filters ===
 with st.sidebar:
     st.image("https://github.com/dicodingacademy/assets/raw/main/logo.png")
+    
+    st.markdown("## Filter Options")
     selected_season = st.multiselect(
-        "Pilih Musim:",
+        "Select Seasons:",
         options=all_df["season_day"].unique(),
         default=all_df["season_day"].unique()
     )
+
     selected_weather = st.multiselect(
-        "Pilih Cuaca:",
+        "Select Weather Conditions:",
         options=all_df["weathersit_hour"].unique(),
         default=all_df["weathersit_hour"].unique()
     )
 
-    st.markdown("### Keterangan Cuaca:")
-    st.caption("1: Cerah dan Berawan Ringan")
-    st.caption("2: Berawan dan Berkabut")
-    st.caption("3: Hujan Ringan dan Bersalju")
-    st.caption("4: Hujan Lebat dan Badai Salju")
+    st.markdown("### Weather Info:")
+    st.caption("1: Clear, Few clouds")
+    st.caption("2: Mist, Cloudy")
+    st.caption("3: Light Rain or Snow")
+    st.caption("4: Heavy Rain or Snowstorm")
 
-    st.write("Navigasi:")
-    st.markdown("[Grafik Penyewaan Sepeda Tiap Jam](#grafik-penyewaan-sepeda-tiap-jam-per-hari)")
-    st.markdown("[Grafik Penyewaan Berdasarkan Musim](#grafik-penyewaan-sepeda-berdasarkan-musim)")
+    st.markdown("### Navigation")
+    st.markdown("[Hourly Rental Trend](#hourly-bike-rental-trend)")
+    st.markdown("[Seasonal Rental Trend](#seasonal-bike-rental-trend)")
 
+# === Filtered DataFrame ===
 filtered_df = all_df[
     (all_df["season_day"].isin(selected_season)) &
     (all_df["weathersit_hour"].isin(selected_weather))
 ]
 
 if filtered_df.empty:
-    st.error("Tidak ada data yang sesuai dengan filter yang dipilih.")
+    st.error("🚫 No data matches the selected filters.")
     st.stop()
 
-st.title("Ride the Trend: Exploring Bike Rentals")
+# === Title ===
+st.title("🚴 Ride the Trend: Exploring Bike Rentals")
 st.subheader("A data analysis project by Irsyad Muhamad Firdaus")
 st.caption("Submission for IDCamp x Dicoding: Data Analyst Learning Path")
 
-st.header("Grafik Penyewaan Sepeda Tiap Jam per Hari")
+st.markdown("---")
+
+# === Hourly Rental Chart ===
+st.header("⏰ Hourly Bike Rental Trend")
 fig, ax = plt.subplots(figsize=(10, 6))
 hourly_trend_df = create_hourly_trend_df(filtered_df)
-colors = ['#007ACC' if hour in [17, 18, 8] else '#B0B0B0' for hour in hourly_trend_df.index]
+highlight_hours = [8, 17, 18]  # commuting hours
+
+colors = ['#007ACC' if hour in highlight_hours else '#B0B0B0' for hour in hourly_trend_df.index]
 hourly_trend_df.plot(kind="bar", color=colors, ax=ax)
 
 for i, (hour, value) in enumerate(hourly_trend_df.items()):
-    if hour in [17, 18, 8]:
-        ax.text(i, value + 5, f'{value:.0f}', ha='center', va='bottom', fontsize=10, color='black')
+    if hour in highlight_hours:
+        ax.text(i, value + 5, f'{value:.0f}', ha='center', va='bottom', fontsize=10)
 
-ax.set_title("Rata-Rata Penyewaan Sepeda Tiap Jam", fontsize=16, fontweight="bold")
-ax.set_xlabel("Jam", fontsize=12)
-ax.set_ylabel("Rata-Rata Penyewa", fontsize=12)
+ax.set_title("Average Bike Rentals per Hour", fontsize=16, fontweight="bold")
+ax.set_xlabel("Hour of the Day", fontsize=12)
+ax.set_ylabel("Average Rentals", fontsize=12)
 ax.tick_params(axis="x", rotation=0)
 ax.tick_params(axis="y", rotation=0)
 st.pyplot(fig)
 
-if st.button('Penjelasan Grafik Penyewaan Tiap Jam'):
-    st.markdown('''Grafik ini menunjukkan rata-rata jumlah penyewaan sepeda per jam sepanjang hari. Pola ini mencerminkan waktu sibuk. :blue[Bar yang berwarna biru] menunjukkan 3 waktu dengan jumlah penyewaan sepeda :blue[tertinggi] dalam waktu 1 hari.''')
+with st.expander("📘 Explanation: Hourly Rental Trend"):
+    st.markdown("""
+    This chart shows the **average number of bike rentals per hour**.  
+    The **blue bars** highlight peak rental hours (typically commuting times at **8 AM, 5 PM, and 6 PM**), 
+    indicating when people rent bikes the most.
+    """)
 
-st.header("Grafik Penyewaan Sepeda Berdasarkan Musim")
+st.markdown("---")
+
+# === Seasonal Rental Chart ===
+st.header("🌤️ Seasonal Bike Rental Trend")
 fig, ax = plt.subplots(figsize=(8, 5))
-seasonly_trend_df = create_seasonal_trend_df(filtered_df)
-max_season = seasonly_trend_df.idxmax()
-colors = ["#FFC300" if season == max_season else "#B0B0B0" for season in seasonly_trend_df.index]
-seasonly_trend_df.plot(kind="bar", color=colors, ax=ax)
+seasonal_trend_df = create_seasonal_trend_df(filtered_df)
+max_season = seasonal_trend_df.idxmax()
 
-for i, (season, value) in enumerate(seasonly_trend_df.items()):
+colors = ["#FFC300" if season == max_season else "#B0B0B0" for season in seasonal_trend_df.index]
+seasonal_trend_df.plot(kind="bar", color=colors, ax=ax)
+
+for i, (season, value) in enumerate(seasonal_trend_df.items()):
     if season == max_season:
-        ax.text(i, value + 5, f'{value:.0f}', ha='center', va='bottom', fontsize=10, color='black')
+        ax.text(i, value + 5, f'{value:.0f}', ha='center', va='bottom', fontsize=10)
 
-ax.set_title("Rata-Rata Penyewaan Sepeda per Musim", fontsize=16, fontweight="bold")
-ax.set_xlabel("Musim", fontsize=12)
-ax.set_ylabel("Rata-Rata Penyewa", fontsize=12)
+ax.set_title("Average Bike Rentals per Season", fontsize=16, fontweight="bold")
+ax.set_xlabel("Season", fontsize=12)
+ax.set_ylabel("Average Rentals", fontsize=12)
 ax.tick_params(axis="x", rotation=0)
 ax.tick_params(axis="y", rotation=0)
 st.pyplot(fig)
 
-if st.button('Penjelasan Grafik Penyewaan Berdasarkan Musim'):
-    st.markdown('''Grafik ini menunjukkan rata-rata jumlah penyewaan sepeda pada setiap musim. Terlihat bahwa :orange[bar yang berwarna orange] memiliki rata-rata penyewaan :orange[tertinggi] dibandingkan dengan yang lain.''')
+with st.expander("📘 Explanation: Seasonal Rental Trend"):
+    st.markdown(f"""
+    This chart shows the **average number of rentals per season**.  
+    The **yellow bar** indicates the season with the **highest rental activity**: **{max_season}**.  
+    This may be due to favorable weather or holiday patterns during that time.
+    """)
