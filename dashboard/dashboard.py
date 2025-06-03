@@ -67,7 +67,7 @@ if filtered_df.empty:
     st.error("Tidak ada data yang sesuai dengan filter yang dipilih.")
     st.stop()
 
-st.title("Submission Data Analyst Dicoding with IDCamp")
+st.title("Ride the Trend: Exploring Bike Rentals")
 st.subheader("by Irsyad Muhamad Firdaus")
 
 st.header("Grafik Penyewaan Sepeda Tiap Jam per Hari")
