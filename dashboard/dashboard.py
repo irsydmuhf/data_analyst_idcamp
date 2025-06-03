@@ -68,7 +68,8 @@ if filtered_df.empty:
     st.stop()
 
 st.title("Ride the Trend: Exploring Bike Rentals")
-st.subheader("by Irsyad Muhamad Firdaus")
+st.subheader("A data analysis project by Irsyad Muhamad Firdaus")
+st.caption("Submission for IDCamp x Dicoding: Data Analyst Learning Path")
 
 st.header("Grafik Penyewaan Sepeda Tiap Jam per Hari")
 fig, ax = plt.subplots(figsize=(10, 6))
